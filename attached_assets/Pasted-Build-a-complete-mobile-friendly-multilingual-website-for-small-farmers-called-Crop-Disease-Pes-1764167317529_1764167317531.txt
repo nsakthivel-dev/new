@@ -1,0 +1,215 @@
+Build a complete, mobile-friendly, multilingual website for small farmers called “Crop Disease & Pest Scout”, following the 10-section structure listed below.
+This should be implemented using a modern web stack (e.g., Next.js, React, TailwindCSS) and use pnpm as the package manager for installation, scripts, and dependency management.
+
+⚙️ Global Technical Requirements
+
+Use Next.js (app or pages router is fine)
+
+Use React + TailwindCSS
+
+Use pnpm for all dependency installation and project commands
+Example:
+
+pnpm install
+
+pnpm add <package>
+
+pnpm dev
+
+Modular component architecture
+
+SEO-friendly pages
+
+Image lazy loading
+
+Multilingual-ready
+
+Mobile-first responsive design
+
+Clean, accessible UI
+
+📌 1. Homepage (Hero + Overview)
+
+Create a welcoming homepage with:
+
+Big hero section: “Detect Crop Problems Early — Simple, Safe, Reliable”
+
+CTA: Upload Leaf Photo
+
+Supported crops slider (tomato, maize, rice, wheat, potato, banana)
+
+Three highlight cards (Works Offline / Safe Advice / FAO-ICAR Guidelines)
+
+Placeholder for short explainer video
+
+“Today’s common diseases in your region” widget
+
+Section teaser linking to Diagnose Tool
+
+📸 2. Diagnose Page (Main Tool)
+
+Build the main diagnosis flow:
+
+Image upload (drag/drop + mobile camera)
+
+Optional multiple images (front, back, stem)
+
+Crop selection dropdown (with auto-detect placeholder)
+
+Step-by-step adaptive symptom questionnaire
+
+Progress bar (Image → Symptoms → Risk → Actions)
+
+Output format:
+
+Suspected issues (3 options with confidence scores)
+
+Risk level indicator
+
+Safe, early-stage action steps (FAO/ICAR/CIMMYT aligned)
+
+Expert escalation message
+
+Safety disclaimer
+
+Button to download results (CSV/JSON)
+
+API placeholders for image analysis & symptom decision tree
+
+📚 3. Crop Library (Knowledge Hub)
+
+Build a full “Crop Knowledge Hub” section:
+
+Crop categories: Vegetables / Cereals / Fruits / Pulses / Cash Crops
+
+For each crop page, include:
+
+Disease & pest image gallery
+
+Early symptoms
+
+Safe organic control options
+
+“Look-alike problems”
+
+Printable “Field Card”
+
+Search bar to filter crops by symptoms or pest name
+
+🧠 4. AI Chat Assistant
+
+Create a conversational AI assistant page:
+
+Chat UI with message bubbles
+
+Buttons: voice input, image upload
+
+Persistent memory storage (crop type, field size, prior issues)
+
+Offline fallback box
+
+Placeholder for integration with LLM API (OpenAI/Anthropic etc.)
+
+📊 5. Farmer Dashboard
+
+Private dashboard (requires login):
+
+Past diagnoses timeline
+
+Weekly crop health score
+
+Weather-based disease alerts
+
+Regional disease watchlist
+
+Download report (PDF/CSV)
+
+Multiple field tracking mode
+
+🏢 6. Experts & Extension Page
+
+Create a network page for agricultural experts:
+
+Directory of verified extension officers
+
+Filters: District, Crop Type, Language
+
+Buttons for booking (Voice / Chat / Video)
+
+Upload image or description for expert review
+
+Official advisory board section
+
+🌐 7. Multilingual Support
+
+Add:
+
+Language switcher component in navbar
+
+English + placeholder languages (Hindi, Swahili, French, Arabic)
+
+RTL compatibility (if Arabic enabled)
+
+Optional audio narration toggle for low-literacy users
+
+📰 8. Alerts & Updates Section
+
+News + advisory page:
+
+Pest outbreak alerts
+
+Weekly agriculture bulletin
+
+Weather-based disease risk predictions
+
+Government schemes
+
+Newsletter subscription box
+
+📱 9. Download App Page
+
+Showcase the mobile app version:
+
+Benefits:
+
+Offline mode
+
+<50 MB lightweight
+
+Built-in diagnosis
+
+Stores history
+
+Screenshots mockups
+
+Buttons for APK download / Play Store (placeholders)
+
+💬 10. Contact / Feedback Page
+
+Include:
+
+Contact form
+
+Bug report
+
+Feature request
+
+Social links
+
+FAQ
+
+🌟 Additional Global Features
+
+Dark mode toggle
+
+Sticky navbar
+
+Footer with sitemap + links
+
+Icons for low-literacy accessibility
+
+Structured data (FAQ + HowTo schema)
+
+API integration placeholder files
+
+Reusable components for buttons/cards/Navbar/Footer
