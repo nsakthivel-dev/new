@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Menu, X, Sun, Moon, Leaf, Globe } from "lucide-react";
+import { Menu, X, Sun, Moon, Leaf, Globe, Shield, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,9 +32,10 @@ export function Navbar() {
     { href: "/chat", label: t("nav.chat") },
     { href: "/dashboard", label: t("nav.dashboard") },
     { href: "/experts", label: t("nav.experts") },
-    { href: "/alerts", label: t("nav.alerts") },
+    { href: "/alerts", label: t("nav.weather") },
     { href: "/download", label: t("nav.download") },
     { href: "/contact", label: t("nav.contact") },
+    { href: "/data-storage", label: "Data Storage", icon: <Database className="h-4 w-4 mr-2" /> },
   ];
 
   const currentLang = languages.find(l => l.code === language) || languages[0];
@@ -52,6 +53,7 @@ export function Navbar() {
             {navLinks.map(link => (
               <Link key={link.href} href={link.href}>
                 <Button variant="ghost" size="sm" data-testid={`link-nav-${link.href.slice(1) || 'home'}`}>
+                  {link.icon && link.icon}
                   {link.label}
                 </Button>
               </Link>
@@ -107,6 +109,7 @@ export function Navbar() {
                   {navLinks.map(link => (
                     <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
                       <Button variant="ghost" className="w-full justify-start" data-testid={`link-mobile-${link.href.slice(1) || 'home'}`}>
+                        {link.icon && link.icon}
                         {link.label}
                       </Button>
                     </Link>

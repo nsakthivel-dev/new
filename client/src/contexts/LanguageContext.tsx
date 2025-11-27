@@ -17,7 +17,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.chat": "AI Assistant",
     "nav.dashboard": "Dashboard",
     "nav.experts": "Experts",
-    "nav.alerts": "Alerts",
+    "nav.weather": "Weather",
     "nav.download": "Download App",
     "nav.contact": "Contact",
     "hero.title": "Detect Crop Problems Early",
@@ -26,6 +26,10 @@ const translations: Record<Language, Record<string, string>> = {
     "feature.offline": "Works Offline",
     "feature.safe": "Safe Advice",
     "feature.guidelines": "FAO-ICAR Guidelines",
+    "weather.title": "Weather Forecast",
+    "weather.description": "Get accurate weather information for your farming activities",
+    "weather.search_placeholder": "Enter location...",
+    "weather.search_button": "Search"
   },
   hi: {
     "nav.home": "होम",
@@ -34,7 +38,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.chat": "एआई सहायक",
     "nav.dashboard": "डैशबोर्ड",
     "nav.experts": "विशेषज्ञ",
-    "nav.alerts": "अलर्ट",
+    "nav.weather": "मौसम",
     "nav.download": "ऐप डाउनलोड",
     "nav.contact": "संपर्क",
     "hero.title": "फसल की समस्याओं का शीघ्र पता लगाएं",
@@ -43,6 +47,10 @@ const translations: Record<Language, Record<string, string>> = {
     "feature.offline": "ऑफ़लाइन काम करता है",
     "feature.safe": "सुरक्षित सलाह",
     "feature.guidelines": "एफएओ-आईसीएआर दिशानिर्देश",
+    "weather.title": "मौसम पूर्वानुमान",
+    "weather.description": "अपनी कृषि गतिविधियों के लिए सटीक मौसम जानकारी प्राप्त करें",
+    "weather.search_placeholder": "स्थान दर्ज करें...",
+    "weather.search_button": "खोज"
   },
   sw: {
     "nav.home": "Nyumbani",
@@ -51,7 +59,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.chat": "Msaidizi wa AI",
     "nav.dashboard": "Dashibodi",
     "nav.experts": "Wataalam",
-    "nav.alerts": "Tahadhari",
+    "nav.weather": "Hali ya Hewa",
     "nav.download": "Pakua Programu",
     "nav.contact": "Wasiliana",
     "hero.title": "Gundua Matatizo ya Mazao Mapema",
@@ -60,6 +68,10 @@ const translations: Record<Language, Record<string, string>> = {
     "feature.offline": "Inafanya Kazi Nje ya Mtandao",
     "feature.safe": "Ushauri Salama",
     "feature.guidelines": "Miongozo ya FAO-ICAR",
+    "weather.title": "Utabiri wa Hali ya Hewa",
+    "weather.description": "Pata taarifa kamili za hali ya hewa kwa shughuli zako za kilimo",
+    "weather.search_placeholder": "Ingiza eneo...",
+    "weather.search_button": "Tafuta"
   },
   fr: {
     "nav.home": "Accueil",
@@ -68,7 +80,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.chat": "Assistant IA",
     "nav.dashboard": "Tableau de Bord",
     "nav.experts": "Experts",
-    "nav.alerts": "Alertes",
+    "nav.weather": "Météo",
     "nav.download": "Télécharger l'App",
     "nav.contact": "Contact",
     "hero.title": "Détecter les Problèmes de Culture Tôt",
@@ -77,6 +89,10 @@ const translations: Record<Language, Record<string, string>> = {
     "feature.offline": "Fonctionne Hors Ligne",
     "feature.safe": "Conseils Sûrs",
     "feature.guidelines": "Directives FAO-ICAR",
+    "weather.title": "Prévisions Météorologiques",
+    "weather.description": "Obtenez des informations météorologiques précises pour vos activités agricoles",
+    "weather.search_placeholder": "Entrez l'emplacement...",
+    "weather.search_button": "Rechercher"
   },
   ar: {
     "nav.home": "الرئيسية",
@@ -85,7 +101,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.chat": "مساعد الذكاء الاصطناعي",
     "nav.dashboard": "لوحة القيادة",
     "nav.experts": "الخبراء",
-    "nav.alerts": "التنبيهات",
+    "nav.weather": "الطقس",
     "nav.download": "تحميل التطبيق",
     "nav.contact": "اتصل",
     "hero.title": "اكتشف مشاكل المحاصيل مبكراً",
@@ -94,6 +110,10 @@ const translations: Record<Language, Record<string, string>> = {
     "feature.offline": "يعمل بدون إنترنت",
     "feature.safe": "نصائح آمنة",
     "feature.guidelines": "إرشادات الفاو-إيكار",
+    "weather.title": "توقعات الطقس",
+    "weather.description": "احصل على معلومات دقيقة عن الطقس لأنشطتك الزراعية",
+    "weather.search_placeholder": "أدخل الموقع...",
+    "weather.search_button": "بحث"
   },
 };
 

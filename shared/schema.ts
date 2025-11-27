@@ -98,6 +98,14 @@ export const feedback = pgTable("feedback", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Content storage
+export const content = pgTable("content", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -137,6 +145,11 @@ export const insertFeedbackSchema = createInsertSchema(feedback).omit({
   status: true,
 });
 
+export const insertContentSchema = createInsertSchema(content).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Select types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -161,3 +174,6 @@ export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
 
 export type Feedback = typeof feedback.$inferSelect;
 export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
+
+export type Content = typeof content.$inferSelect;
+export type InsertContent = z.infer<typeof insertContentSchema>;

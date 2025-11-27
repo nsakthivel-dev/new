@@ -10,6 +10,14 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
+// Define Content type
+interface Content {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+}
+
 export interface IStorage {
   // Users
   getUser(id: string): Promise<User | undefined>;
@@ -50,6 +58,12 @@ export interface IStorage {
   // Feedback
   getFeedback(): Promise<Feedback[]>;
   createFeedback(feedback: InsertFeedback): Promise<Feedback>;
+  
+  // Content
+  getContent(): Promise<Content[]>;
+  getContentById(id: string): Promise<Content | undefined>;
+  createContent(content: Omit<Content, "id">): Promise<Content>;
+  deleteContent(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -61,6 +75,7 @@ export class MemStorage implements IStorage {
   private alerts: Map<string, Alert>;
   private chatMessages: Map<string, ChatMessage>;
   private feedbackList: Map<string, Feedback>;
+  private content: Map<string, Content>;
 
   constructor() {
     this.users = new Map();
@@ -71,12 +86,13 @@ export class MemStorage implements IStorage {
     this.alerts = new Map();
     this.chatMessages = new Map();
     this.feedbackList = new Map();
+    this.content = new Map();
     
     this.seedInitialData();
   }
 
   private seedInitialData() {
-    const cropData: InsertCrop[] = [
+    const cropData = [
       { name: "Tomato", scientificName: "Solanum lycopersicum", category: "vegetables", imageUrl: "/crops/tomato.jpg", description: "Popular vegetable crop" },
       { name: "Maize", scientificName: "Zea mays", category: "cereals", imageUrl: "/crops/maize.jpg", description: "Staple cereal crop" },
       { name: "Rice", scientificName: "Oryza sativa", category: "cereals", imageUrl: "/crops/rice.jpg", description: "Primary food crop" },
@@ -94,13 +110,17 @@ export class MemStorage implements IStorage {
         category: crop.category,
         imageUrl: crop.imageUrl ?? null,
         description: crop.description ?? null,
-      });
+      } as any);
     });
 
-    const expertData: InsertExpert[] = [
-      { name: "Dr. Rajesh Kumar", specialization: ["vegetables", "pest_management"], district: "Punjab", languages: ["English", "Hindi"], contactEmail: "rajesh@agri.gov", avatarUrl: "", verified: true },
-      { name: "Mary Odhiambo", specialization: ["cereals", "disease_control"], district: "Nakuru", languages: ["English", "Swahili"], contactEmail: "mary@agri.ke", avatarUrl: "", verified: true },
-      { name: "Ahmed Hassan", specialization: ["fruits", "organic_farming"], district: "Fayoum", languages: ["Arabic", "English"], contactEmail: "ahmed@agri.eg", avatarUrl: "", verified: true },
+    // Updated expert data focusing on India and Tamil Nadu
+    const expertData = [
+      { name: "Dr. Ramesh Kumar", specialization: ["vegetables", "pest_management"], district: "Coimbatore", languages: ["English", "Tamil"], contactEmail: "ramesh@tnagri.tn.gov.in", avatarUrl: "", verified: true },
+      { name: "Dr. Priya Lakshmi", specialization: ["cereals", "disease_control"], district: "Thanjavur", languages: ["English", "Tamil"], contactEmail: "priya@tnagri.tn.gov.in", avatarUrl: "", verified: true },
+      { name: "Dr. Senthil Nathan", specialization: ["fruits", "organic_farming"], district: "Madurai", languages: ["English", "Tamil"], contactEmail: "senthil@tnagri.tn.gov.in", avatarUrl: "", verified: true },
+      { name: "Dr. Karthik Raj", specialization: ["cash_crops", "soil_health"], district: "Erode", languages: ["English", "Tamil"], contactEmail: "karthik@tnagri.tn.gov.in", avatarUrl: "", verified: true },
+      { name: "Dr. Meena Devi", specialization: ["vegetables", "water_management"], district: "Salem", languages: ["English", "Tamil"], contactEmail: "meena@tnagri.tn.gov.in", avatarUrl: "", verified: true },
+      { name: "Dr. Arjun Reddy", specialization: ["cereals", "climate_resilience"], district: "Chennai", languages: ["English", "Tamil", "Telugu"], contactEmail: "arjun@tnagri.tn.gov.in", avatarUrl: "", verified: true },
     ];
 
     expertData.forEach(expert => {
@@ -112,16 +132,16 @@ export class MemStorage implements IStorage {
         district: expert.district ?? null,
         languages: expert.languages ?? null,
         contactEmail: expert.contactEmail ?? null,
-        contactPhone: expert.contactPhone ?? null,
+        contactPhone: null,
         avatarUrl: expert.avatarUrl ?? null,
         verified: expert.verified ?? null,
-      });
+      } as any);
     });
 
-    const alertData: InsertAlert[] = [
-      { title: "Fall Armyworm Alert", description: "Increased sightings in maize fields across the region", type: "pest_outbreak", severity: "urgent", region: "East Africa", cropIds: [] },
-      { title: "Late Blight Warning", description: "Weather conditions favorable for potato late blight", type: "weather", severity: "warning", region: "South Asia", cropIds: [] },
-      { title: "New Subsidy Scheme", description: "Government announces new crop insurance program", type: "scheme", severity: "info", region: "National", cropIds: [] },
+    const alertData = [
+      { title: "Fall Armyworm Alert", description: "Increased sightings in maize fields across Tamil Nadu", type: "pest_outbreak", severity: "urgent", region: "Tamil Nadu", cropIds: [] },
+      { title: "Late Blight Warning", description: "Weather conditions favorable for potato late blight in hill areas", type: "weather", severity: "warning", region: "Tamil Nadu", cropIds: [] },
+      { title: "New Subsidy Scheme", description: "Government announces new crop insurance program for small farmers", type: "scheme", severity: "info", region: "Tamil Nadu", cropIds: [] },
     ];
 
     alertData.forEach(alert => {
@@ -130,13 +150,13 @@ export class MemStorage implements IStorage {
         id,
         type: alert.type,
         description: alert.description,
-        severity: alert.severity ?? null,
+        severity: alert.severity || null,
         title: alert.title,
-        region: alert.region ?? null,
-        cropIds: alert.cropIds ?? null,
+        region: alert.region || null,
+        cropIds: alert.cropIds || null,
         publishedAt: new Date(),
         expiresAt: null,
-      });
+      } as any);
     });
   }
 
@@ -151,7 +171,7 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { 
+    const user: any = { 
       id,
       username: insertUser.username,
       password: insertUser.password,
@@ -178,7 +198,7 @@ export class MemStorage implements IStorage {
 
   async createCrop(insertCrop: InsertCrop): Promise<Crop> {
     const id = randomUUID();
-    const crop: Crop = { 
+    const crop: any = { 
       id,
       name: insertCrop.name,
       scientificName: insertCrop.scientificName ?? null,
@@ -205,18 +225,18 @@ export class MemStorage implements IStorage {
 
   async createDisease(insertDisease: InsertDisease): Promise<Disease> {
     const id = randomUUID();
-    const disease: Disease = { 
+    const disease = { 
       id,
-      name: insertDisease.name,
-      cropId: insertDisease.cropId ?? null,
-      symptoms: insertDisease.symptoms ?? null,
-      causes: insertDisease.causes ?? null,
-      organicTreatment: insertDisease.organicTreatment ?? null,
-      chemicalTreatment: insertDisease.chemicalTreatment ?? null,
-      prevention: insertDisease.prevention ?? null,
-      imageUrls: insertDisease.imageUrls ?? null,
-      severity: insertDisease.severity ?? null,
-    };
+      name: (insertDisease.name as any)?.[0] ?? insertDisease.name,
+      cropId: (insertDisease.cropId as any)?.[0] ?? insertDisease.cropId ?? null,
+      symptoms: (insertDisease.symptoms as any)?.[0] ?? insertDisease.symptoms ?? null,
+      causes: (insertDisease.causes as any)?.[0] ?? insertDisease.causes ?? null,
+      organicTreatment: (insertDisease.organicTreatment as any)?.[0] ?? insertDisease.organicTreatment ?? null,
+      chemicalTreatment: (insertDisease.chemicalTreatment as any)?.[0] ?? insertDisease.chemicalTreatment ?? null,
+      prevention: (insertDisease.prevention as any)?.[0] ?? insertDisease.prevention ?? null,
+      imageUrls: (insertDisease.imageUrls as any)?.[0] ?? insertDisease.imageUrls ?? null,
+      severity: (insertDisease.severity as any)?.[0] ?? insertDisease.severity ?? null,
+    } as Disease;
     this.diseases.set(id, disease);
     return disease;
   }
@@ -236,17 +256,17 @@ export class MemStorage implements IStorage {
 
   async createDiagnosis(insertDiagnosis: InsertDiagnosis): Promise<Diagnosis> {
     const id = randomUUID();
-    const diagnosis: Diagnosis = { 
+    const diagnosis = { 
       id,
-      imageUrl: insertDiagnosis.imageUrl ?? null,
-      cropId: insertDiagnosis.cropId ?? null,
-      symptoms: insertDiagnosis.symptoms ?? null,
-      userId: insertDiagnosis.userId ?? null,
+      imageUrl: (insertDiagnosis.imageUrl as any)?.[0] ?? insertDiagnosis.imageUrl ?? null,
+      cropId: (insertDiagnosis.cropId as any)?.[0] ?? insertDiagnosis.cropId ?? null,
+      symptoms: (insertDiagnosis.symptoms as any)?.[0] ?? insertDiagnosis.symptoms ?? null,
+      userId: (insertDiagnosis.userId as any)?.[0] ?? insertDiagnosis.userId ?? null,
       results: insertDiagnosis.results ?? null,
-      aiAnalysis: insertDiagnosis.aiAnalysis ?? null,
-      recommendations: insertDiagnosis.recommendations ?? null,
+      aiAnalysis: (insertDiagnosis.aiAnalysis as any)?.[0] ?? insertDiagnosis.aiAnalysis ?? null,
+      recommendations: (insertDiagnosis.recommendations as any)?.[0] ?? insertDiagnosis.recommendations ?? null,
       createdAt: new Date(),
-    };
+    } as Diagnosis;
     this.diagnoses.set(id, diagnosis);
     return diagnosis;
   }
@@ -267,17 +287,17 @@ export class MemStorage implements IStorage {
 
   async createExpert(insertExpert: InsertExpert): Promise<Expert> {
     const id = randomUUID();
-    const expert: Expert = { 
+    const expert = { 
       id,
-      name: insertExpert.name,
-      specialization: insertExpert.specialization ?? null,
-      district: insertExpert.district ?? null,
-      languages: insertExpert.languages ?? null,
-      contactEmail: insertExpert.contactEmail ?? null,
-      contactPhone: insertExpert.contactPhone ?? null,
-      avatarUrl: insertExpert.avatarUrl ?? null,
-      verified: insertExpert.verified ?? null,
-    };
+      name: (insertExpert.name as any)?.[0] ?? insertExpert.name,
+      specialization: (insertExpert.specialization as any)?.[0] ?? insertExpert.specialization ?? null,
+      district: (insertExpert.district as any)?.[0] ?? insertExpert.district ?? null,
+      languages: (insertExpert.languages as any)?.[0] ?? insertExpert.languages ?? null,
+      contactEmail: (insertExpert.contactEmail as any)?.[0] ?? insertExpert.contactEmail ?? null,
+      contactPhone: (insertExpert.contactPhone as any)?.[0] ?? insertExpert.contactPhone ?? null,
+      avatarUrl: (insertExpert.avatarUrl as any)?.[0] ?? insertExpert.avatarUrl ?? null,
+      verified: (insertExpert.verified as any)?.[0] ?? insertExpert.verified ?? null,
+    } as Expert;
     this.experts.set(id, expert);
     return expert;
   }
@@ -305,17 +325,17 @@ export class MemStorage implements IStorage {
 
   async createAlert(insertAlert: InsertAlert): Promise<Alert> {
     const id = randomUUID();
-    const alert: Alert = { 
+    const alert = { 
       id,
-      type: insertAlert.type,
-      description: insertAlert.description,
-      severity: insertAlert.severity ?? null,
-      title: insertAlert.title,
-      region: insertAlert.region ?? null,
-      cropIds: insertAlert.cropIds ?? null,
+      type: (insertAlert.type as any)?.[0] ?? insertAlert.type,
+      description: (insertAlert.description as any)?.[0] ?? insertAlert.description,
+      severity: (insertAlert.severity as any)?.[0] ?? insertAlert.severity ?? null,
+      title: (insertAlert.title as any)?.[0] ?? insertAlert.title,
+      region: (insertAlert.region as any)?.[0] ?? insertAlert.region ?? null,
+      cropIds: (insertAlert.cropIds as any)?.[0] ?? insertAlert.cropIds ?? null,
       publishedAt: new Date(),
       expiresAt: insertAlert.expiresAt ?? null,
-    };
+    } as Alert;
     this.alerts.set(id, alert);
     return alert;
   }
@@ -333,15 +353,15 @@ export class MemStorage implements IStorage {
 
   async createChatMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
     const id = randomUUID();
-    const message: ChatMessage = { 
+    const message = { 
       id,
-      userId: insertMessage.userId ?? null,
-      role: insertMessage.role,
-      content: insertMessage.content,
-      imageUrl: insertMessage.imageUrl ?? null,
+      userId: (insertMessage.userId as any)?.[0] ?? insertMessage.userId ?? null,
+      role: (insertMessage.role as any)?.[0] ?? insertMessage.role,
+      content: (insertMessage.content as any)?.[0] ?? insertMessage.content,
+      imageUrl: (insertMessage.imageUrl as any)?.[0] ?? insertMessage.imageUrl ?? null,
       metadata: insertMessage.metadata ?? null,
       createdAt: new Date(),
-    };
+    } as ChatMessage;
     this.chatMessages.set(id, message);
     return message;
   }
@@ -357,17 +377,40 @@ export class MemStorage implements IStorage {
 
   async createFeedback(insertFeedback: InsertFeedback): Promise<Feedback> {
     const id = randomUUID();
-    const feedbackItem: Feedback = { 
+    const feedbackItem = { 
       id,
-      name: insertFeedback.name ?? null,
-      email: insertFeedback.email ?? null,
-      type: insertFeedback.type,
-      message: insertFeedback.message,
+      name: (insertFeedback.name as any)?.[0] ?? insertFeedback.name ?? null,
+      email: (insertFeedback.email as any)?.[0] ?? insertFeedback.email ?? null,
+      type: (insertFeedback.type as any)?.[0] ?? insertFeedback.type,
+      message: (insertFeedback.message as any)?.[0] ?? insertFeedback.message,
       status: "pending",
       createdAt: new Date(),
-    };
+    } as Feedback;
     this.feedbackList.set(id, feedbackItem);
     return feedbackItem;
+  }
+
+  // Content
+  async getContent(): Promise<Content[]> {
+    return Array.from(this.content.values());
+  }
+
+  async getContentById(id: string): Promise<Content | undefined> {
+    return this.content.get(id);
+  }
+
+  async createContent(newContent: Omit<Content, "id">): Promise<Content> {
+    const id = randomUUID();
+    const content = {
+      id,
+      ...newContent
+    };
+    this.content.set(id, content);
+    return content;
+  }
+
+  async deleteContent(id: string): Promise<boolean> {
+    return this.content.delete(id);
   }
 }
 

@@ -109,18 +109,18 @@ export default function Home() {
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Today's Common Diseases in Your Region</h2>
-            <p className="text-muted-foreground">Stay informed about current crop health issues</p>
+            <h2 className="text-3xl font-bold mb-4">Today's Common Diseases in Tamil Nadu</h2>
+            <p className="text-muted-foreground">Stay informed about current crop health issues in your district</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card data-testid="card-regional-disease-1">
               <CardHeader>
                 <Badge variant="destructive" className="w-fit mb-2">High Risk</Badge>
-                <CardTitle>Late Blight in Tomatoes</CardTitle>
+                <CardTitle>Bacterial Wilt in Bananas</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  High humidity has increased late blight occurrence. Check leaves for brown spots.
+                  Increased bacterial wilt reported in Thanjavur and Tiruchirappalli districts. Look for yellowing leaves.
                 </p>
                 <Link href="/library">
                   <Button variant="outline" size="sm" data-testid="button-learn-more-1">
@@ -133,11 +133,11 @@ export default function Home() {
             <Card data-testid="card-regional-disease-2">
               <CardHeader>
                 <Badge className="w-fit mb-2 bg-yellow-500">Medium Risk</Badge>
-                <CardTitle>Stem Borer in Maize</CardTitle>
+                <CardTitle>Rice Blast</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Monitor your maize fields for stem borer activity during this season.
+                  Monsoon conditions favor rice blast in Coimbatore and Erode districts. Watch for white lesions.
                 </p>
                 <Link href="/library">
                   <Button variant="outline" size="sm" data-testid="button-learn-more-2">
@@ -150,11 +150,11 @@ export default function Home() {
             <Card data-testid="card-regional-disease-3">
               <CardHeader>
                 <Badge variant="secondary" className="w-fit mb-2">Low Risk</Badge>
-                <CardTitle>Powdery Mildew</CardTitle>
+                <CardTitle>Red Spider Mites</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Currently low occurrence but monitor vegetable crops regularly.
+                  Low occurrence but monitor tomato crops in Salem and Namakkal districts.
                 </p>
                 <Link href="/library">
                   <Button variant="outline" size="sm" data-testid="button-learn-more-3">

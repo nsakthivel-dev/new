@@ -31,13 +31,23 @@ export default function Experts() {
     return matchesSearch && matchesDistrict && matchesSpecialization;
   });
 
+  // Tamil Nadu districts
+  const tamilNaduDistricts = [
+    "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", 
+    "Tirunelveli", "Erode", "Vellore", "Thanjavur", "Thoothukudi",
+    "Dindigul", "Krishnagiri", "Namakkal", "Perambalur", "Pudukkottai",
+    "Ramanathapuram", "Sivaganga", "Theni", "The Nilgiris", "Kanyakumari",
+    "Karur", "Ariyalur", "Nagapattinam", "Virudhunagar", "Tiruppur",
+    "Cuddalore", "Kallakurichi", "Ranipet", "Tenkasi", "Tirupathur"
+  ];
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4" data-testid="text-page-title">Agricultural Experts Network</h1>
+          <h1 className="text-4xl font-bold mb-4" data-testid="text-page-title">Agricultural Experts Network - Tamil Nadu</h1>
           <p className="text-muted-foreground">
-            Connect with verified extension officers and agricultural specialists
+            Connect with verified extension officers and agricultural specialists in Tamil Nadu
           </p>
         </div>
 
@@ -60,9 +70,9 @@ export default function Experts() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Districts</SelectItem>
-                  <SelectItem value="Punjab">Punjab</SelectItem>
-                  <SelectItem value="Nakuru">Nakuru</SelectItem>
-                  <SelectItem value="Fayoum">Fayoum</SelectItem>
+                  {tamilNaduDistricts.map(district => (
+                    <SelectItem key={district} value={district}>{district}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Select value={specializationFilter} onValueChange={setSpecializationFilter}>
@@ -74,9 +84,13 @@ export default function Experts() {
                   <SelectItem value="vegetables">Vegetables</SelectItem>
                   <SelectItem value="cereals">Cereals</SelectItem>
                   <SelectItem value="fruits">Fruits</SelectItem>
+                  <SelectItem value="cash_crops">Cash Crops</SelectItem>
                   <SelectItem value="pest_management">Pest Management</SelectItem>
                   <SelectItem value="disease_control">Disease Control</SelectItem>
                   <SelectItem value="organic_farming">Organic Farming</SelectItem>
+                  <SelectItem value="soil_health">Soil Health</SelectItem>
+                  <SelectItem value="water_management">Water Management</SelectItem>
+                  <SelectItem value="climate_resilience">Climate Resilience</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -177,14 +191,14 @@ export default function Experts() {
 
         <Card className="mt-12 bg-muted/50">
           <CardHeader>
-            <CardTitle>Official Advisory Board</CardTitle>
+            <CardTitle>Tamil Nadu Agricultural Advisory Board</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              All experts listed here are verified by official agricultural extension services and follow FAO-ICAR guidelines.
+              All experts listed here are verified by Tamil Nadu Agricultural University and follow ICAR guidelines.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Badge variant="outline">FAO Certified</Badge>
+              <Badge variant="outline">TNAU Certified</Badge>
               <Badge variant="outline">ICAR Approved</Badge>
               <Badge variant="outline">Government Extension</Badge>
             </div>

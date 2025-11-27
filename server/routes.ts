@@ -1,8 +1,22 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { analyzeCropImage, getChatResponse } from "./openai";
 import { insertDiagnosisSchema, insertChatMessageSchema, insertFeedbackSchema } from "@shared/schema";
+import { getWeatherData } from "./weather";
+import multer from "multer";
+import fs from "fs/promises";
+import path from "path";
+import * as pdfParse from "pdf-parse";
+import { extractRawText } from "mammoth";
+
+// Configure multer for file uploads
+const upload = multer({ dest: "uploads/" });
+
+// Extend Express Request type to include file
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Crops endpoints
@@ -42,16 +56,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertDiagnosisSchema.parse(req.body);
       
-      let aiResults;
-      if (validatedData.imageUrl && validatedData.cropId) {
-        const crop = await storage.getCrop(validatedData.cropId);
+      // Extract values with proper type checking
+      const cropId = typeof validatedData.cropId === 'string' ? validatedData.cropId : undefined;
+      const imageUrl = typeof validatedData.imageUrl === 'string' ? validatedData.imageUrl : undefined;
+      
+      if (imageUrl && cropId) {
+        const crop = await storage.getCrop(cropId);
         if (!crop) {
           return res.status(400).json({ error: "Invalid crop ID" });
         }
 
-        const base64Image = validatedData.imageUrl.split(",")[1] || validatedData.imageUrl;
-        const symptoms = validatedData.symptoms || [];
-        
+        // Ensure imageUrl is a string before splitting
+        const imageUrlString = imageUrl as string;
+        const base64Image = imageUrlString.split(",")[1] || imageUrlString;
+        const symptoms = Array.isArray(validatedData.symptoms) ? validatedData.symptoms as string[] : [];
+      
+        let aiResults;
         if (!process.env.OPENAI_API_KEY) {
           aiResults = {
             diseases: [
@@ -63,9 +83,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } else {
           aiResults = await analyzeCropImage(base64Image, crop.name, symptoms);
         }
-        
-        const diagnosisData = {
-          ...validatedData,
+      
+        // Create diagnosis data with proper types
+        const diagnosisData: any = {
+          userId: typeof validatedData.userId === 'string' ? validatedData.userId : undefined,
+          cropId: cropId,
+          imageUrl: imageUrl,
+          symptoms: symptoms,
           results: aiResults.diseases,
           aiAnalysis: aiResults.analysis,
           recommendations: aiResults.recommendations,
@@ -74,7 +98,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const diagnosis = await storage.createDiagnosis(diagnosisData);
         res.json(diagnosis);
       } else {
-        const diagnosis = await storage.createDiagnosis(validatedData);
+        // Create diagnosis data with proper types
+        const diagnosisData: any = {
+          userId: typeof validatedData.userId === 'string' ? validatedData.userId : undefined,
+          cropId: cropId,
+          imageUrl: imageUrl,
+          symptoms: Array.isArray(validatedData.symptoms) ? validatedData.symptoms as string[] : undefined,
+          results: validatedData.results,
+          aiAnalysis: typeof validatedData.aiAnalysis === 'string' ? validatedData.aiAnalysis : undefined,
+          recommendations: typeof validatedData.recommendations === 'string' ? validatedData.recommendations : undefined,
+        };
+      
+        const diagnosis = await storage.createDiagnosis(diagnosisData);
         res.json(diagnosis);
       }
     } catch (error: any) {
@@ -99,13 +134,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Experts endpoints
   app.get("/api/experts", async (req, res) => {
     try {
-      const { district, specialization, languages } = req.query;
+      // Properly handle query parameters
+      const district = typeof req.query.district === 'string' ? req.query.district : undefined;
+      const specialization = typeof req.query.specialization === 'string' ? req.query.specialization : undefined;
+      const languages = typeof req.query.languages === 'string' ? req.query.languages : undefined;
       
+      // For Tamil Nadu focus, we can add default filtering or special handling here if needed
       if (district || specialization || languages) {
         const filters = {
-          district: district as string,
-          specialization: specialization as string,
-          languages: languages as string,
+          district: district,
+          specialization: specialization,
+          languages: languages,
         };
         const experts = await storage.getExpertsByFilters(filters);
         res.json(experts);
@@ -145,28 +184,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertChatMessageSchema.parse(req.body);
       
-      const userMessage = await storage.createChatMessage(validatedData);
+      // Extract values with proper type checking
+      const userId = typeof validatedData.userId === 'string' ? validatedData.userId : "guest";
+      const role = typeof validatedData.role === 'string' ? validatedData.role : "user";
+      const content = typeof validatedData.content === 'string' ? validatedData.content : "";
       
-      if (validatedData.role === "user") {
-        const chatHistory = await storage.getChatMessages(validatedData.userId || "guest");
+      const userMessage = await storage.createChatMessage({
+        userId: userId,
+        role: role,
+        content: content,
+        imageUrl: typeof validatedData.imageUrl === 'string' ? validatedData.imageUrl : undefined,
+        metadata: validatedData.metadata,
+      } as any);
+      
+      // Properly check role value
+      if (role === "user") {
+        const chatHistory = await storage.getChatMessages(userId);
         const messages = chatHistory.map(msg => ({
-          role: msg.role,
-          content: msg.content,
+          role: typeof msg.role === 'string' ? msg.role : 'user',
+          content: typeof msg.content === 'string' ? msg.content : '',
         }));
 
-        let aiResponse;
+        let aiResponse: string;
         if (!process.env.OPENAI_API_KEY) {
           aiResponse = "AI chat is currently unavailable. Please configure OPENAI_API_KEY to enable this feature. In the meantime, please visit the Experts page to connect with agricultural specialists who can help with your farming questions.";
         } else {
           aiResponse = await getChatResponse(messages, validatedData.metadata);
         }
-        
+      
         const assistantMessage = await storage.createChatMessage({
-          userId: validatedData.userId,
+          userId: userId,
           role: "assistant",
           content: aiResponse,
           metadata: validatedData.metadata,
-        });
+          imageUrl: undefined,
+        } as any);
 
         res.json({
           userMessage,
@@ -189,6 +241,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(feedback);
     } catch (error: any) {
       res.status(400).json({ error: error.message || "Failed to submit feedback" });
+    }
+  });
+
+  // Weather endpoint
+  app.get("/api/weather", async (req, res) => {
+    try {
+      const { location } = req.query;
+      
+      if (!location || typeof location !== 'string') {
+        return res.status(400).json({ error: "Location parameter is required" });
+      }
+      
+      const weatherData = await getWeatherData(location);
+      res.json(weatherData);
+    } catch (error: any) {
+      console.error("Weather error:", error);
+      res.status(500).json({ error: error.message || "Failed to fetch weather data" });
+    }
+  });
+
+  // File upload endpoint
+  app.post("/api/upload", upload.single("file"), async (req, res) => {
+    try {
+      const multerReq = req as MulterRequest;
+      
+      if (!multerReq.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const filePath = multerReq.file.path;
+      const fileName = multerReq.file.originalname;
+      let content = "";
+
+      // Determine file type and extract content
+      if (multerReq.file.mimetype === "application/pdf" || fileName.endsWith(".pdf")) {
+        // PDF file
+        const data = await fs.readFile(filePath);
+        const pdfData = await (pdfParse as any)(data);
+        content = pdfData.text;
+      } else if (
+        multerReq.file.mimetype ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        fileName.endsWith(".docx")
+      ) {
+        // DOCX file
+        const result = await extractRawText({ path: filePath });
+        content = result.value;
+      } else if (
+        multerReq.file.mimetype === "text/plain" ||
+        fileName.endsWith(".txt")
+      ) {
+        // TXT file
+        content = await fs.readFile(filePath, "utf-8");
+      } else {
+        // Unsupported file type
+        await fs.unlink(filePath); // Clean up uploaded file
+        return res
+          .status(400)
+          .json({ error: "Unsupported file type. Please upload PDF, DOCX, or TXT files." });
+      }
+
+      // Clean up uploaded file
+      await fs.unlink(filePath);
+
+      // Respond with extracted content
+      res.json({
+        content: content,
+        filename: fileName,
+      });
+    } catch (error: any) {
+      console.error("File upload error:", error);
+      res.status(500).json({ error: error.message || "Failed to process file" });
     }
   });
 

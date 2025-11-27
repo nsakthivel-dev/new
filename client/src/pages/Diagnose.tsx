@@ -29,7 +29,7 @@ export default function Diagnose() {
   const [image, setImage] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string>("");
   const [symptoms, setSymptoms] = useState<string[]>([]);
-  const [diagnosisResult, setDiagnosisResult] = useState<Diagnosis | null>(null);
+  const [diagnosisResult, setDiagnosisResult] = useState<any | null>(null);
   const { toast } = useToast();
 
   const { data: crops } = useQuery<Crop[]>({
@@ -38,9 +38,9 @@ export default function Diagnose() {
 
   const diagnosisMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest("POST", "/api/diagnoses", data) as Promise<Diagnosis>;
+      return apiRequest("POST", "/api/diagnoses", data) as Promise<any>;
     },
-    onSuccess: (data: Diagnosis) => {
+    onSuccess: (data: any) => {
       setDiagnosisResult(data);
       setStep(3);
       toast({
