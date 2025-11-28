@@ -26,8 +26,15 @@ interface CalendarEvent {
   description?: string;
 }
 
-export function EventCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+interface EventCalendarProps {
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
+  currentDate?: Date;
+  onDateChange?: (date: Date) => void;
+}
+
+export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalCurrentDate, onDateChange }: EventCalendarProps) {
+  const [internalCurrentDate, setInternalCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,8 +43,27 @@ export function EventCalendar() {
     description: ""
   });
 
-  const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
-  const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+  const currentDate = externalCurrentDate || internalCurrentDate;
+
+  const nextMonth = () => {
+    const newDate = addMonths(currentDate, 1);
+    if (onDateChange) {
+      onDateChange(newDate);
+    } else {
+      setInternalCurrentDate(newDate);
+    }
+    if (onNextMonth) onNextMonth();
+  };
+
+  const prevMonth = () => {
+    const newDate = subMonths(currentDate, 1);
+    if (onDateChange) {
+      onDateChange(newDate);
+    } else {
+      setInternalCurrentDate(newDate);
+    }
+    if (onPrevMonth) onPrevMonth();
+  };
 
   const handleDateClick = (day: Date) => {
     setSelectedDate(day);
