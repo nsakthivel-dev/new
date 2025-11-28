@@ -17,78 +17,137 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Star, Sprout } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Star, Sprout } from "lucide-react";
 
 interface CalendarEvent {
   id: string;
   title: string;
   date: Date;
   description?: string;
-  type?: "user" | "festival" | "crop";
+  type: "user" | "festival" | "crop";
 }
 
-// Agriculture and festival data
-const agricultureData = [
-  {
-    month: "January",
-    festivals: "Pongal, Thai Pongal, Mattu Pongal, Thiruvalluvar Day",
-    cropRecommendations: "Samba harvest, groundnut sowing, sunflower planting, rice nursery preparation"
-  },
-  {
-    month: "February",
-    festivals: "Maha Shivaratri",
-    cropRecommendations: "Sesame sowing, millet sowing, sugarcane irrigation, land prep for Kuruvai"
-  },
-  {
-    month: "March",
-    festivals: "Panguni Uthiram",
-    cropRecommendations: "Summer vegetable sowing, lady's finger, brinjal, tomato, rice nursery (early kuruvai)"
-  },
-  {
-    month: "April",
-    festivals: "Tamil New Year, Chitra Pournami",
-    cropRecommendations: "Short-term vegetable sowing, green gram, black gram, land preparation for Kuruvai paddy"
-  },
-  {
-    month: "May",
-    festivals: "Vaikasi Visakam",
-    cropRecommendations: "Cotton sowing, maize cultivation, Kuruvai preparation, drip irrigation crops"
-  },
-  {
-    month: "June",
-    festivals: "—",
-    cropRecommendations: "Kuruvai planting, turmeric, banana, sugarcane, rainwater harvesting work"
-  },
-  {
-    month: "July",
-    festivals: "Aadi Amavasai, Aadi Perukku",
-    cropRecommendations: "Kuruvai crop management, sorghum, pearl millet, fertilizer for banana"
-  },
-  {
-    month: "August",
-    festivals: "Krishna Jayanthi, Avani Avittam, Vinayagar Chaturthi",
-    cropRecommendations: "Samba nursery, fodder crops, maize fertilizer application"
-  },
-  {
-    month: "September",
-    festivals: "Navratri beginning",
-    cropRecommendations: "Samba paddy planting, mustard, sesame sowing, rice pest control"
-  },
-  {
-    month: "October",
-    festivals: "Ayudha Pooja, Vijayadashami",
-    cropRecommendations: "Samba irrigation, Rabi season preparation, planting chillies, onion, carrot"
-  },
-  {
-    month: "November",
-    festivals: "Deepavali, Karthigai Deepam",
-    cropRecommendations: "Groundnut sowing, green gram, Kuruvai harvest, winter vegetable planting"
-  },
-  {
-    month: "December",
-    festivals: "Margazhi festivals, Vaikunta Ekadashi",
-    cropRecommendations: "Rabi crops like wheat, maize, chickpea; frost/pest control"
-  }
+// Specific festival dates (approximate for recurring festivals)
+const festivalDates = [
+  // January
+  { date: "01-14", name: "Pongal" },
+  { date: "01-15", name: "Thai Pongal" },
+  { date: "01-16", name: "Mattu Pongal" },
+  { date: "01-15", name: "Thiruvalluvar Day" },
+  
+  // February
+  { date: "02-15", name: "Maha Shivaratri" },
+  
+  // March
+  { date: "03-20", name: "Panguni Uthiram" },
+  
+  // April
+  { date: "04-01", name: "Tamil New Year" },
+  { date: "04-10", name: "Chitra Pournami" },
+  
+  // May
+  { date: "05-05", name: "Vaikasi Visakam" },
+  
+  // July
+  { date: "07-05", name: "Aadi Amavasai" },
+  { date: "07-15", name: "Aadi Perukku" },
+  
+  // August
+  { date: "08-15", name: "Krishna Jayanthi" },
+  { date: "08-20", name: "Avani Avittam" },
+  { date: "08-25", name: "Vinayagar Chaturthi" },
+  
+  // September
+  { date: "09-01", name: "Navratri beginning" },
+  
+  // October
+  { date: "10-01", name: "Ayudha Pooja" },
+  { date: "10-05", name: "Vijayadashami" },
+  
+  // November
+  { date: "11-01", name: "Deepavali" },
+  { date: "11-15", name: "Karthigai Deepam" },
+  
+  // December
+  { date: "12-15", name: "Margazhi festivals" },
+  { date: "12-25", name: "Vaikunta Ekadashi" }
+];
+
+// Specific crop activity dates (approximate for recurring activities)
+const cropDates = [
+  // January
+  { date: "01-01", activity: "Samba harvest" },
+  { date: "01-05", activity: "Groundnut sowing" },
+  { date: "01-10", activity: "Sunflower planting" },
+  { date: "01-20", activity: "Rice nursery preparation" },
+  
+  // February
+  { date: "02-01", activity: "Sesame sowing" },
+  { date: "02-05", activity: "Millet sowing" },
+  { date: "02-10", activity: "Sugarcane irrigation" },
+  { date: "02-20", activity: "Land prep for Kuruvai" },
+  
+  // March
+  { date: "03-01", activity: "Summer vegetable sowing" },
+  { date: "03-05", activity: "Lady's finger planting" },
+  { date: "03-10", activity: "Brinjal planting" },
+  { date: "03-15", activity: "Tomato planting" },
+  { date: "03-20", activity: "Rice nursery (early kuruvai)" },
+  
+  // April
+  { date: "04-01", activity: "Short-term vegetable sowing" },
+  { date: "04-05", activity: "Green gram sowing" },
+  { date: "04-10", activity: "Black gram sowing" },
+  { date: "04-15", activity: "Land preparation for Kuruvai paddy" },
+  
+  // May
+  { date: "05-01", activity: "Cotton sowing" },
+  { date: "05-05", activity: "Maize cultivation" },
+  { date: "05-10", activity: "Kuruvai preparation" },
+  { date: "05-15", activity: "Drip irrigation crops" },
+  
+  // June
+  { date: "06-01", activity: "Kuruvai planting" },
+  { date: "06-05", activity: "Turmeric planting" },
+  { date: "06-10", activity: "Banana planting" },
+  { date: "06-15", activity: "Sugarcane planting" },
+  { date: "06-20", activity: "Rainwater harvesting work" },
+  
+  // July
+  { date: "07-01", activity: "Kuruvai crop management" },
+  { date: "07-05", activity: "Sorghum planting" },
+  { date: "07-10", activity: "Pearl millet planting" },
+  { date: "07-15", activity: "Fertilizer for banana" },
+  
+  // August
+  { date: "08-01", activity: "Samba nursery" },
+  { date: "08-05", activity: "Fodder crops" },
+  { date: "08-10", activity: "Maize fertilizer application" },
+  
+  // September
+  { date: "09-01", activity: "Samba paddy planting" },
+  { date: "09-05", activity: "Mustard sowing" },
+  { date: "09-10", activity: "Sesame sowing" },
+  { date: "09-15", activity: "Rice pest control" },
+  
+  // October
+  { date: "10-01", activity: "Samba irrigation" },
+  { date: "10-05", activity: "Rabi season preparation" },
+  { date: "10-10", activity: "Planting chillies" },
+  { date: "10-15", activity: "Planting onion" },
+  { date: "10-20", activity: "Planting carrot" },
+  
+  // November
+  { date: "11-01", activity: "Groundnut sowing" },
+  { date: "11-05", activity: "Green gram sowing" },
+  { date: "11-10", activity: "Kuruvai harvest" },
+  { date: "11-15", activity: "Winter vegetable planting" },
+  
+  // December
+  { date: "12-01", activity: "Rabi crops like wheat" },
+  { date: "12-05", activity: "Maize planting" },
+  { date: "12-10", activity: "Chickpea planting" },
+  { date: "12-15", activity: "Frost/pest control" }
 ];
 
 interface EventCalendarProps {
@@ -190,6 +249,9 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
     
     // Get today's date for comparison
     const today = new Date();
+    
+    // Get current year for matching dates
+    const currentYear = format(currentDate, "yyyy");
 
     const rows = [];
     let days = [];
@@ -205,11 +267,31 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
         // Check if this day is today
         const isToday = isSameDay(day, today);
         
-        // Check for festivals and crop recommendations
-        const monthName = format(day, "MMMM");
-        const monthData = agricultureData.find(data => data.month === monthName);
-        const hasFestival = monthData && monthData.festivals && monthData.festivals !== "—";
-        const hasCropRecommendation = monthData && monthData.cropRecommendations;
+        // Check for festivals on this specific date
+        const monthDay = format(day, "MM-dd");
+        const festivalsOnDate = festivalDates.filter(fest => fest.date === monthDay);
+        
+        // Check for crop activities on this specific date
+        const cropsOnDate = cropDates.filter(crop => crop.date === monthDay);
+        
+        // Create festival events
+        const festivalEvents: CalendarEvent[] = festivalsOnDate.map(fest => ({
+          id: `fest-${fest.date}-${fest.name}`,
+          title: fest.name,
+          date: day,
+          type: "festival"
+        }));
+        
+        // Create crop events
+        const cropEvents: CalendarEvent[] = cropsOnDate.map(crop => ({
+          id: `crop-${crop.date}-${crop.activity}`,
+          title: crop.activity,
+          date: day,
+          type: "crop"
+        }));
+        
+        // Combine all events for this day
+        const allEvents = [...dayEvents, ...festivalEvents, ...cropEvents];
 
         days.push(
           <div
@@ -228,25 +310,11 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
               <div className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></div>
             )}
             
-            {/* Festival indicator */}
-            {hasFestival && (
-              <div className="absolute top-1 left-1">
-                <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-              </div>
-            )}
-            
-            {/* Crop recommendation indicator */}
-            {hasCropRecommendation && (
-              <div className="absolute bottom-1 left-1">
-                <Sprout className="h-3 w-3 text-green-500" />
-              </div>
-            )}
-            
             <span className={`text-sm font-medium ${isToday ? "text-primary font-bold" : ""}`}>
               {formattedDate}
             </span>
             <div className="mt-1 space-y-1">
-              {dayEvents.map(event => (
+              {allEvents.map(event => (
                 <div 
                   key={event.id} 
                   className={`text-xs p-1 rounded truncate ${
