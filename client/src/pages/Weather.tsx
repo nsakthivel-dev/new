@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Cloud, MapPin, Thermometer, Droplets, Wind, Eye, Sun, CloudRain, ChevronLeft, Calendar as CalendarIcon } from "lucide-react";
+import { Cloud, MapPin, Thermometer, Droplets, Wind, Eye, Sun, CloudRain } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { EventCalendar } from "@/components/EventCalendar";
 
 interface WeatherData {
   location: {
@@ -43,81 +44,10 @@ interface WeatherData {
   };
 }
 
-// Calendar data structure
-interface CalendarMonth {
-  name: string;
-  festivals: string;
-  cropRecommendations: string;
-}
-
-const calendarData: CalendarMonth[] = [
-  {
-    name: "January",
-    festivals: "Pongal, Thai Pongal, Mattu Pongal, Thiruvalluvar Day",
-    cropRecommendations: "Samba harvest, groundnut sowing, sunflower planting, rice nursery preparation"
-  },
-  {
-    name: "February",
-    festivals: "Maha Shivaratri",
-    cropRecommendations: "Sesame sowing, millet sowing, sugarcane irrigation, land prep for Kuruvai"
-  },
-  {
-    name: "March",
-    festivals: "Panguni Uthiram",
-    cropRecommendations: "Summer vegetable sowing, lady's finger, brinjal, tomato, rice nursery (early kuruvai)"
-  },
-  {
-    name: "April",
-    festivals: "Tamil New Year, Chitra Pournami",
-    cropRecommendations: "Short-term vegetable sowing, green gram, black gram, land preparation for Kuruvai paddy"
-  },
-  {
-    name: "May",
-    festivals: "Vaikasi Visakam",
-    cropRecommendations: "Cotton sowing, maize cultivation, Kuruvai preparation, drip irrigation crops"
-  },
-  {
-    name: "June",
-    festivals: "—",
-    cropRecommendations: "Kuruvai planting, turmeric, banana, sugarcane, rainwater harvesting work"
-  },
-  {
-    name: "July",
-    festivals: "Aadi Amavasai, Aadi Perukku",
-    cropRecommendations: "Kuruvai crop management, sorghum, pearl millet, fertilizer for banana"
-  },
-  {
-    name: "August",
-    festivals: "Krishna Jayanthi, Avani Avittam, Vinayagar Chaturthi",
-    cropRecommendations: "Samba nursery, fodder crops, maize fertilizer application"
-  },
-  {
-    name: "September",
-    festivals: "Navratri beginning",
-    cropRecommendations: "Samba paddy planting, mustard, sesame sowing, rice pest control"
-  },
-  {
-    name: "October",
-    festivals: "Ayudha Pooja, Vijayadashami",
-    cropRecommendations: "Samba irrigation, Rabi season preparation, planting chillies, onion, carrot"
-  },
-  {
-    name: "November",
-    festivals: "Deepavali, Karthigai Deepam",
-    cropRecommendations: "Groundnut sowing, green gram, Kuruvai harvest, winter vegetable planting"
-  },
-  {
-    name: "December",
-    festivals: "Margazhi festivals, Vaikunta Ekadashi",
-    cropRecommendations: "Rabi crops like wheat, maize, chickpea; frost/pest control"
-  }
-];
-
 export default function Weather() {
   const { t } = useLanguage();
   const [location, setLocation] = useState("Chennai");
   const [searchLocation, setSearchLocation] = useState("Chennai");
-  const [showCalendar, setShowCalendar] = useState(false);
 
   const { data: weather, isLoading, error, refetch } = useQuery<WeatherData>({
     queryKey: ["weather", location],
@@ -157,50 +87,10 @@ export default function Weather() {
           </p>
         </div>
 
-        {/* Calendar Toggle Button with Left Arrow */}
-        <div className="mb-4">
-          <Button 
-            variant="outline" 
-            onClick={() => setShowCalendar(!showCalendar)}
-            className="flex items-center gap-2"
-          >
-            <ChevronLeft className={`h-4 w-4 transition-transform ${showCalendar ? 'rotate-90' : ''}`} />
-            {showCalendar ? "Hide Calendar" : "Show Agriculture & Festival Calendar"}
-          </Button>
+        {/* Event Calendar Section */}
+        <div className="mb-8">
+          <EventCalendar />
         </div>
-
-        {/* Calendar Section */}
-        {showCalendar && (
-          <Card className="mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5" />
-                Full-Year Agriculture & Festival Calendar
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {calendarData.map((month, index) => (
-                  <Card key={index} className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{month.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h3 className="font-semibold text-primary mb-1">Festivals:</h3>
-                        <p className="text-sm">{month.festivals}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-primary mb-1">Crop Recommendations:</h3>
-                        <p className="text-sm">{month.cropRecommendations}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Weather Search Card */}
         <Card className="mb-8">
