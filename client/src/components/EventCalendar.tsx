@@ -27,8 +27,19 @@ interface CalendarEvent {
   type: "user" | "festival" | "crop";
 }
 
+interface Festival {
+  date: string;
+  name: string;
+}
+
+interface CropActivity {
+  date: string;
+  activity: string;
+  season: string;
+}
+
 // Specific festival dates (approximate for recurring festivals)
-const festivalDates = [
+const festivalDates: Festival[] = [
   // January
   { date: "01-14", name: "Pongal" },
   { date: "01-15", name: "Thai Pongal" },
@@ -73,81 +84,112 @@ const festivalDates = [
   { date: "12-25", name: "Vaikunta Ekadashi" }
 ];
 
-// Specific crop activity dates (approximate for recurring activities)
-const cropDates = [
-  // January
-  { date: "01-01", activity: "Samba harvest" },
-  { date: "01-05", activity: "Groundnut sowing" },
-  { date: "01-10", activity: "Sunflower planting" },
-  { date: "01-20", activity: "Rice nursery preparation" },
+// Crop season data with start and end dates
+const cropSeasons = [
+  {
+    name: "Rabi Season",
+    startDate: "10-01",
+    endDate: "03-31",
+    description: "Winter cropping season"
+  },
+  {
+    name: "Kharif Season",
+    startDate: "06-01",
+    endDate: "09-30",
+    description: "Monsoon cropping season"
+  },
+  {
+    name: "Zaid Season",
+    startDate: "03-01",
+    endDate: "06-30",
+    description: "Summer cropping season"
+  }
+];
+
+// Specific crop activities with season information
+const cropActivities: CropActivity[] = [
+  // Rabi Season Crops (October to March)
+  { date: "10-01", activity: "Rabi season preparation", season: "Rabi" },
+  { date: "10-05", activity: "Wheat sowing", season: "Rabi" },
+  { date: "10-10", activity: "Barley sowing", season: "Rabi" },
+  { date: "10-15", activity: "Pea sowing", season: "Rabi" },
+  { date: "10-20", activity: "Mustard sowing", season: "Rabi" },
+  { date: "10-25", activity: "Potato planting", season: "Rabi" },
+  { date: "11-01", activity: "Onion planting", season: "Rabi" },
+  { date: "11-05", activity: "Garlic planting", season: "Rabi" },
+  { date: "11-10", activity: "Carrot sowing", season: "Rabi" },
+  { date: "11-15", activity: "Cabbage planting", season: "Rabi" },
+  { date: "11-20", activity: "Cauliflower planting", season: "Rabi" },
+  { date: "11-25", activity: "Radish sowing", season: "Rabi" },
+  { date: "12-01", activity: "Spinach sowing", season: "Rabi" },
+  { date: "12-05", activity: "Coriander sowing", season: "Rabi" },
+  { date: "12-10", activity: "Fenugreek sowing", season: "Rabi" },
+  { date: "12-15", activity: "Frost protection measures", season: "Rabi" },
+  { date: "12-20", activity: "Irrigation management", season: "Rabi" },
+  { date: "12-25", activity: "Pest control measures", season: "Rabi" },
+  { date: "01-05", activity: "Harvesting of early rabi crops", season: "Rabi" },
+  { date: "01-10", activity: "Fertilizer application", season: "Rabi" },
+  { date: "01-15", activity: "Weed control", season: "Rabi" },
+  { date: "01-20", activity: "Disease management", season: "Rabi" },
+  { date: "02-01", activity: "Harvesting of main rabi crops", season: "Rabi" },
+  { date: "02-05", activity: "Post-harvest management", season: "Rabi" },
+  { date: "02-10", activity: "Storage preparation", season: "Rabi" },
+  { date: "03-01", activity: "End of Rabi season", season: "Rabi" },
+  { date: "03-05", activity: "Land preparation for next season", season: "Rabi" },
+  { date: "03-10", activity: "Soil testing", season: "Rabi" },
+  { date: "03-15", activity: "Manure application", season: "Rabi" },
+  { date: "03-20", activity: "Seed treatment", season: "Rabi" },
+  { date: "03-25", activity: "Field preparation", season: "Rabi" },
   
-  // February
-  { date: "02-01", activity: "Sesame sowing" },
-  { date: "02-05", activity: "Millet sowing" },
-  { date: "02-10", activity: "Sugarcane irrigation" },
-  { date: "02-20", activity: "Land prep for Kuruvai" },
+  // Kharif Season Crops (June to September)
+  { date: "06-01", activity: "Kharif season preparation", season: "Kharif" },
+  { date: "06-05", activity: "Rice transplanting", season: "Kharif" },
+  { date: "06-10", activity: "Maize sowing", season: "Kharif" },
+  { date: "06-15", activity: "Cotton sowing", season: "Kharif" },
+  { date: "06-20", activity: "Sugarcane planting", season: "Kharif" },
+  { date: "06-25", activity: "Sorghum sowing", season: "Kharif" },
+  { date: "07-01", activity: "Pulses sowing", season: "Kharif" },
+  { date: "07-05", activity: "Groundnut sowing", season: "Kharif" },
+  { date: "07-10", activity: "Sesame sowing", season: "Kharif" },
+  { date: "07-15", activity: "Moong dal sowing", season: "Kharif" },
+  { date: "07-20", activity: "Urad dal sowing", season: "Kharif" },
+  { date: "07-25", activity: "Irrigation scheduling", season: "Kharif" },
+  { date: "08-01", activity: "Fertilizer application", season: "Kharif" },
+  { date: "08-05", activity: "Weed control", season: "Kharif" },
+  { date: "08-10", activity: "Pest management", season: "Kharif" },
+  { date: "08-15", activity: "Disease control", season: "Kharif" },
+  { date: "08-20", activity: "Intercultural operations", season: "Kharif" },
+  { date: "08-25", activity: "Earthing up", season: "Kharif" },
+  { date: "09-01", activity: "Harvesting early kharif crops", season: "Kharif" },
+  { date: "09-05", activity: "Storage preparation", season: "Kharif" },
+  { date: "09-10", activity: "Marketing arrangements", season: "Kharif" },
+  { date: "09-15", activity: "Post-harvest handling", season: "Kharif" },
+  { date: "09-20", activity: "End of Kharif season", season: "Kharif" },
+  { date: "09-25", activity: "Field cleaning", season: "Kharif" },
   
-  // March
-  { date: "03-01", activity: "Summer vegetable sowing" },
-  { date: "03-05", activity: "Lady's finger planting" },
-  { date: "03-10", activity: "Brinjal planting" },
-  { date: "03-15", activity: "Tomato planting" },
-  { date: "03-20", activity: "Rice nursery (early kuruvai)" },
-  
-  // April
-  { date: "04-01", activity: "Short-term vegetable sowing" },
-  { date: "04-05", activity: "Green gram sowing" },
-  { date: "04-10", activity: "Black gram sowing" },
-  { date: "04-15", activity: "Land preparation for Kuruvai paddy" },
-  
-  // May
-  { date: "05-01", activity: "Cotton sowing" },
-  { date: "05-05", activity: "Maize cultivation" },
-  { date: "05-10", activity: "Kuruvai preparation" },
-  { date: "05-15", activity: "Drip irrigation crops" },
-  
-  // June
-  { date: "06-01", activity: "Kuruvai planting" },
-  { date: "06-05", activity: "Turmeric planting" },
-  { date: "06-10", activity: "Banana planting" },
-  { date: "06-15", activity: "Sugarcane planting" },
-  { date: "06-20", activity: "Rainwater harvesting work" },
-  
-  // July
-  { date: "07-01", activity: "Kuruvai crop management" },
-  { date: "07-05", activity: "Sorghum planting" },
-  { date: "07-10", activity: "Pearl millet planting" },
-  { date: "07-15", activity: "Fertilizer for banana" },
-  
-  // August
-  { date: "08-01", activity: "Samba nursery" },
-  { date: "08-05", activity: "Fodder crops" },
-  { date: "08-10", activity: "Maize fertilizer application" },
-  
-  // September
-  { date: "09-01", activity: "Samba paddy planting" },
-  { date: "09-05", activity: "Mustard sowing" },
-  { date: "09-10", activity: "Sesame sowing" },
-  { date: "09-15", activity: "Rice pest control" },
-  
-  // October
-  { date: "10-01", activity: "Samba irrigation" },
-  { date: "10-05", activity: "Rabi season preparation" },
-  { date: "10-10", activity: "Planting chillies" },
-  { date: "10-15", activity: "Planting onion" },
-  { date: "10-20", activity: "Planting carrot" },
-  
-  // November
-  { date: "11-01", activity: "Groundnut sowing" },
-  { date: "11-05", activity: "Green gram sowing" },
-  { date: "11-10", activity: "Kuruvai harvest" },
-  { date: "11-15", activity: "Winter vegetable planting" },
-  
-  // December
-  { date: "12-01", activity: "Rabi crops like wheat" },
-  { date: "12-05", activity: "Maize planting" },
-  { date: "12-10", activity: "Chickpea planting" },
-  { date: "12-15", activity: "Frost/pest control" }
+  // Zaid Season Crops (March to June)
+  { date: "03-01", activity: "Zaid season preparation", season: "Zaid" },
+  { date: "03-05", activity: "Watermelon planting", season: "Zaid" },
+  { date: "03-10", activity: "Muskmelon planting", season: "Zaid" },
+  { date: "03-15", activity: "Cucumber planting", season: "Zaid" },
+  { date: "03-20", activity: "Bitter gourd planting", season: "Zaid" },
+  { date: "03-25", activity: "Bottle gourd planting", season: "Zaid" },
+  { date: "04-01", activity: "Snake gourd planting", season: "Zaid" },
+  { date: "04-05", activity: "Pointed gourd planting", season: "Zaid" },
+  { date: "04-10", activity: "Drumstick planting", season: "Zaid" },
+  { date: "04-15", activity: "Amaranth sowing", season: "Zaid" },
+  { date: "04-20", activity: "Fenugreek sowing", season: "Zaid" },
+  { date: "04-25", activity: "Coriander sowing", season: "Zaid" },
+  { date: "05-01", activity: "Irrigation management", season: "Zaid" },
+  { date: "05-05", activity: "Fertilizer application", season: "Zaid" },
+  { date: "05-10", activity: "Pest control", season: "Zaid" },
+  { date: "05-15", activity: "Disease management", season: "Zaid" },
+  { date: "05-20", activity: "Harvesting early zaid crops", season: "Zaid" },
+  { date: "05-25", activity: "Marketing", season: "Zaid" },
+  { date: "06-01", activity: "Harvesting main zaid crops", season: "Zaid" },
+  { date: "06-05", activity: "Post-harvest handling", season: "Zaid" },
+  { date: "06-10", activity: "Storage preparation", season: "Zaid" },
+  { date: "06-15", activity: "End of Zaid season", season: "Zaid" }
 ];
 
 interface EventCalendarProps {
@@ -269,13 +311,13 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
         
         // Check for festivals on this specific date
         const monthDay = format(day, "MM-dd");
-        const festivalsOnDate = festivalDates.filter(fest => fest.date === monthDay);
+        const festivalsOnDate = festivalDates.filter((fest: Festival) => fest.date === monthDay);
         
         // Check for crop activities on this specific date
-        const cropsOnDate = cropDates.filter(crop => crop.date === monthDay);
+        const cropsOnDate = cropActivities.filter((crop: CropActivity) => crop.date === monthDay);
         
         // Create festival events
-        const festivalEvents: CalendarEvent[] = festivalsOnDate.map(fest => ({
+        const festivalEvents: CalendarEvent[] = festivalsOnDate.map((fest: Festival) => ({
           id: `fest-${fest.date}-${fest.name}`,
           title: fest.name,
           date: day,
@@ -283,7 +325,7 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
         }));
         
         // Create crop events
-        const cropEvents: CalendarEvent[] = cropsOnDate.map(crop => ({
+        const cropEvents: CalendarEvent[] = cropsOnDate.map((crop: CropActivity) => ({
           id: `crop-${crop.date}-${crop.activity}`,
           title: crop.activity,
           date: day,
@@ -357,6 +399,26 @@ export function EventCalendar({ onPrevMonth, onNextMonth, currentDate: externalC
           <div className="calendar">
             {renderDays()}
             {renderCells()}
+          </div>
+          
+          {/* Crop Seasons Information */}
+          <div className="mt-6 pt-4 border-t">
+            <h3 className="text-lg font-semibold mb-3">Crop Seasons</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {cropSeasons.map((season, index) => (
+                <div 
+                  key={index} 
+                  className="p-3 rounded-lg border bg-green-50"
+                >
+                  <h4 className="font-medium text-green-800">{season.name}</h4>
+                  <p className="text-sm text-green-600">{season.description}</p>
+                  <div className="flex justify-between text-xs mt-2">
+                    <span>Start: {season.startDate}</span>
+                    <span>End: {season.endDate}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           
           {/* Legend */}
