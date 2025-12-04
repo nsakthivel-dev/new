@@ -1,13 +1,53 @@
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Bell, User } from "lucide-react";
 
 export default function AdminHeader() {
+  const [location] = useLocation();
+  
+  // Map routes to page titles
+  const getPageTitle = () => {
+    switch (location) {
+      case "/admin":
+      case "/admin/crop-library":
+        return "Crop Library Manager";
+      case "/admin/dashboard":
+        return "Admin Dashboard";
+      case "/admin/content":
+        return "Content Manager";
+      case "/admin/documents":
+        return "Document Manager";
+      case "/admin/users":
+        return "User Management";
+      default:
+        return "Admin Panel";
+    }
+  };
+  
+  const getPageDescription = () => {
+    switch (location) {
+      case "/admin":
+      case "/admin/crop-library":
+        return "Manage crop library content that will be displayed on the public crop library page";
+      case "/admin/dashboard":
+        return "Overview of your application statistics and recent activity";
+      case "/admin/content":
+        return "Manage general content for your application";
+      case "/admin/documents":
+        return "Upload and manage documents for the knowledge base";
+      case "/admin/users":
+        return "Manage user accounts and permissions";
+      default:
+        return "Manage your application settings and content";
+    }
+  };
+
   return (
     <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between px-6 py-4">
         <div>
-          <h1 className="text-xl font-semibold text-foreground">Admin Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Manage your application settings and content</p>
+          <h1 className="text-xl font-semibold text-foreground">{getPageTitle()}</h1>
+          <p className="text-sm text-muted-foreground">{getPageDescription()}</p>
         </div>
         
         <div className="flex items-center gap-4">

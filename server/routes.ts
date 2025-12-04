@@ -131,6 +131,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/diseases/:id", async (req, res) => {
+    try {
+      const disease = await storage.getDisease(req.params.id);
+      if (!disease) {
+        return res.status(404).json({ error: "Disease not found" });
+      }
+      res.json(disease);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch disease" });
+    }
+  });
+
   // Experts endpoints
   app.get("/api/experts", async (req, res) => {
     try {

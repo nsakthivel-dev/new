@@ -164,11 +164,11 @@ export default function ChatWindow({ onAddToHistory }: ChatWindowProps) {
           <div className="flex items-center justify-center h-full">
             <div className="text-center text-muted-foreground max-w-md">
               <h3 className="text-lg font-semibold mb-2">Welcome to AI Assistant</h3>
-              <p className="mb-2">Ask questions about crops, pests, diseases, or your documents</p>
-              <p className="text-sm">I can help with general agriculture knowledge or specific document content</p>
-              <div className="mt-4 text-xs text-muted-foreground">
-                <p>• Use "Clear Chat" to remove current conversation</p>
-                <p>• Use "Clear History" to remove all chat history</p>
+              <p className="mb-3">Ask questions about crops, pests, diseases, or your agricultural documents</p>
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3 text-left">
+                <p className="text-sm text-yellow-700">
+                  <span className="font-medium">Note:</span> Responses are for reference only. AI-generated answers may not be completely accurate. Always consult with agricultural experts for critical decisions.
+                </p>
               </div>
             </div>
           </div>

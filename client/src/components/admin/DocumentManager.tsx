@@ -19,8 +19,9 @@ export default function DocumentManager() {
   return (
     <div className="flex-1 bg-background">
       <div className="container mx-auto px-4 sm:px-6 py-6">
+        {/* Page Header - Using common AdminHeader instead */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Document Management</h1>
+          <h1 className="text-2xl font-bold text-foreground">Document Management</h1>
           <p className="text-muted-foreground">
             Manage documents for the AI Assistant. When users ask questions specifically about these documents, the AI will provide only accurate information from them.
           </p>

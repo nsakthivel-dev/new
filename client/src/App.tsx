@@ -10,19 +10,19 @@ import { Footer } from "@/components/Footer";
 import Home from "@/pages/Home";
 import Diagnose from "@/pages/Diagnose";
 import Library from "@/pages/Library";
+import CropLibrary from "@/pages/CropLibrary";
 import RagAssistant from "@/pages/RagAssistant";
 import Dashboard from "@/pages/Dashboard";
 import Experts from "@/pages/Experts";
 import Weather from "@/pages/Weather";
 import Contact from "@/pages/Contact";
-import DataStorage from "@/pages/DataStorage";
 import FarmConnect from "@/pages/FarmConnect";
 import NotFound from "@/pages/not-found";
 import AdminDashboard from "@/pages/AdminDashboard";
-import DataStorageManager from "@/components/admin/DataStorageManager";
 import ContentManager from "@/components/admin/ContentManager";
 import UserManagement from "@/components/admin/UserManagement";
 import DocumentManager from "@/components/admin/DocumentManager";
+import CropLibraryManager from "@/components/admin/CropLibraryManager";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 
@@ -32,12 +32,12 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/diagnose" component={Diagnose} />
       <Route path="/library" component={Library} />
+      <Route path="/crop-library" component={CropLibrary} />
       <Route path="/chat" component={RagAssistant} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/experts" component={Experts} />
       <Route path="/alerts" component={Weather} />
       <Route path="/contact" component={Contact} />
-      <Route path="/data-storage" component={DataStorage} />
       <Route path="/farm-connect" component={FarmConnect} />
       <Route component={NotFound} />
     </Switch>
@@ -48,12 +48,12 @@ function AdminRouter() {
   return (
     <Switch>
       <Route path="/admin/dashboard" component={AdminDashboard} />
-      <Route path="/admin/data-storage" component={DataStorageManager} />
       <Route path="/admin/content" component={ContentManager} />
+      <Route path="/admin/crop-library" component={CropLibraryManager} />
       <Route path="/admin/documents" component={DocumentManager} />
       <Route path="/admin/users" component={UserManagement} />
       <Route path="/admin">
-        <Redirect to="/admin/dashboard" />
+        <Redirect to="/admin/crop-library" />
       </Route>
     </Switch>
   );

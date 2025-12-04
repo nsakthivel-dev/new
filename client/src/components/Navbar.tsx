@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Sun, Moon, Leaf, Globe, Database, ChevronDown, Users } from "lucide-react";
+import { Menu, X, Sun, Moon, Leaf, Globe, ChevronDown, Users, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,13 +39,13 @@ export function Navbar() {
     { href: "/", label: t("nav.home") },
     { href: "/diagnose", label: t("nav.diagnose") },
     { href: "/library", label: t("nav.library") },
+    { href: "/crop-library", label: "Crop Library", icon: <Sprout className="h-4 w-4" /> },
     { href: "/chat", label: "AI Assistant" },
     { href: "/dashboard", label: t("nav.dashboard") },
     { href: "/experts", label: t("nav.experts") },
     { href: "/alerts", label: t("nav.weather") },
     { href: "/contact", label: t("nav.contact") },
     { href: "/farm-connect", label: "FarmConnect", icon: <Users className="h-4 w-4" /> },
-    { href: "/data-storage", label: "Data Storage", icon: <Database className="h-4 w-4" /> },
   ];
 
   const currentLang = languages.find(l => l.code === language) || languages[0];

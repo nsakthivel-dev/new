@@ -68,12 +68,12 @@ export default function ContentManager() {
     <div className="container mx-auto py-6">
       <Card>
         <CardHeader>
-          <CardTitle>Content Manager</CardTitle>
+          <CardTitle>Stored Content</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mt-6">
             <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-              <h3 className="text-lg font-semibold">Stored Content</h3>
+              <h3 className="text-lg font-semibold">Content Items</h3>
               <Button variant="outline" size="sm" onClick={fetchContent} disabled={loading}>
                 Refresh
               </Button>

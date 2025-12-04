@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, Download, BookOpen } from "lucide-react";
+import { Search, Download, Bug, Microscope } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Crop, Disease } from "@shared/schema";
 import diseaseImage from "@assets/generated_images/tomato_disease_example.png";
+import { CropDiseases } from "@/components/CropDiseases";
 
 const categories = [
   { id: "all", label: "All Crops" },
@@ -21,6 +22,7 @@ const categories = [
 export default function Library() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCrop, setSelectedCrop] = useState<{id: string, name: string} | null>(null);
 
   const { data: crops, isLoading } = useQuery<Crop[]>({
     queryKey: ["/api/crops"],
@@ -32,11 +34,25 @@ export default function Library() {
     return matchesCategory && matchesSearch;
   });
 
+  // If a crop is selected, show its diseases
+  if (selectedCrop) {
+    return (
+      <CropDiseases 
+        cropId={selectedCrop.id} 
+        cropName={selectedCrop.name} 
+        onClose={() => setSelectedCrop(null)} 
+      />
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4" data-testid="text-page-title">Crop Knowledge Library</h1>
+          <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3">
+            <Bug className="h-8 w-8 text-primary" />
+            Crop Diseases & Pests Library
+          </h1>
           <p className="text-muted-foreground">
             Comprehensive guides on crop diseases, pests, and organic control methods
           </p>
@@ -84,7 +100,7 @@ export default function Library() {
                   {crop.imageUrl ? (
                     <img src={crop.imageUrl} alt={crop.name} className="w-full h-full object-cover" />
                   ) : (
-                    <BookOpen className="h-12 w-12 text-muted-foreground" />
+                    <Microscope className="h-12 w-12 text-muted-foreground" />
                   )}
                 </div>
                 <CardHeader>
@@ -101,8 +117,14 @@ export default function Library() {
                     {crop.description || "Detailed information about common diseases and pests affecting this crop."}
                   </p>
                   <div className="space-y-2">
-                    <Button variant="outline" className="w-full" size="sm" data-testid={`button-view-diseases-${crop.id}`}>
-                      View Diseases
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      size="sm" 
+                      data-testid={`button-view-diseases-${crop.id}`}
+                      onClick={() => setSelectedCrop({id: crop.id, name: crop.name})}
+                    >
+                      View Diseases & Pests
                     </Button>
                     <Button variant="outline" className="w-full" size="sm" data-testid={`button-download-card-${crop.id}`}>
                       <Download className="h-4 w-4 mr-2" />
@@ -117,7 +139,7 @@ export default function Library() {
 
         {filteredCrops?.length === 0 && (
           <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <Microscope className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No crops found</h3>
             <p className="text-muted-foreground">Try adjusting your search or category filter</p>
           </div>

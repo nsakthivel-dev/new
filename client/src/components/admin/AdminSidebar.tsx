@@ -1,12 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Database, FileText, Settings, Users, LayoutDashboard, LogOut } from "lucide-react";
+import { FileText, Settings, Users, LayoutDashboard, LogOut, Sprout } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const adminNavItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
-  { href: "/admin/data-storage", label: "Data Storage", icon: <Database className="h-5 w-5" /> },
   { href: "/admin/content", label: "Content Manager", icon: <FileText className="h-5 w-5" /> },
+  { href: "/admin/crop-library", label: "Crop Library", icon: <Sprout className="h-5 w-5" /> },
   { href: "/admin/documents", label: "Document Manager", icon: <FileText className="h-5 w-5" /> },
   { href: "/admin/users", label: "User Management", icon: <Users className="h-5 w-5" /> },
 ];
