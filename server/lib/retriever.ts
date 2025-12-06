@@ -62,19 +62,32 @@ export async function generateAnswer(question: string, nearest: Array<{id: strin
     const prompt = buildPrompt(question, relevantDocs);
     console.log('Prompt built successfully');
     
-    // Try OpenRouter first (using Grok model)
+    // Try OpenRouter first (using Qwen3 Coder model)
+    let timeoutId: NodeJS.Timeout | null = null; // Declare timeoutId in outer scope
     try {
-      console.log('Attempting OpenRouter with Grok model...');
+      console.log('Attempting OpenRouter with Qwen3 Coder model...');
+      const controller = new AbortController();
+      timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
       const completion = await openrouter.chat.completions.create({ 
-        model: 'x-ai/grok-4.1-fast:free', // Using the free Grok model from OpenRouter
+        model: 'qwen/qwen3-coder:free', // Using the free Qwen3 Coder model from OpenRouter
         messages: [
-          { role: 'system', content: 'You are a helpful agricultural assistant.' }, 
+          { role: 'system', content: 'You are a helpful agricultural assistant with strong coding and technical capabilities. Provide concise, accurate answers.' }, 
           { role: 'user', content: prompt }
         ], 
-        max_tokens: 800 
-      });
+        max_tokens: 1000,
+        temperature: 0.7,
+        top_p: 0.9
+      }, { signal: controller.signal });
       
-      const answer = completion.choices[0].message.content || 'No answer generated';
+      if (timeoutId) clearTimeout(timeoutId);
+      
+      const answer = completion.choices[0].message.content?.trim() || '';
+      
+      // Check if the answer is empty or too short
+      if (!answer || answer.length < 5) {
+        throw new Error('Received empty or insufficient response from Qwen3 Coder');
+      }
       const sources = relevantDocs.map((n, i) => ({ 
         id: n.metadata?.source || n.id, 
         score: n.score 
@@ -83,7 +96,14 @@ export async function generateAnswer(question: string, nearest: Array<{id: strin
       console.log('✅ OpenRouter response generated successfully');
       return { answer, sources, raw: completion };
     } catch (openRouterError: any) {
+      if (timeoutId) clearTimeout(timeoutId); // Ensure timeout is cleared even if an error occurs
       console.error('❌ Error generating answer with OpenRouter:', openRouterError.message);
+      
+      // Handle timeout specifically
+      if (openRouterError.name === 'AbortError' || openRouterError.message?.includes('timeout')) {
+        console.error('⏰ OpenRouter request timed out');
+        throw new Error('The AI model is taking too long to respond. Please try again or use a different question.');
+      }
       
       // Try Gemini as fallback
       if (googleAI) {

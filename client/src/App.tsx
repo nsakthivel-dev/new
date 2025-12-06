@@ -25,6 +25,7 @@ import DocumentManager from "@/components/admin/DocumentManager";
 import CropLibraryManager from "@/components/admin/CropLibraryManager";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import AdminFooter from "@/components/admin/AdminFooter";
 
 function Router() {
   return (
@@ -69,8 +70,8 @@ function App() {
         <ThemeProvider>
           <LanguageProvider>
             {isAdminRoute ? (
-              // Admin layout with fixed sidebar and header
-              <div className="flex min-h-screen">
+              // Admin layout with fixed sidebar, header, and footer
+              <div className="flex min-h-screen flex-col">
                 <div className="fixed top-0 left-0 h-full w-64 z-50">
                   <AdminSidebar />
                 </div>
@@ -81,6 +82,7 @@ function App() {
                   <div className="flex-1 overflow-auto">
                     <AdminRouter />
                   </div>
+                  <AdminFooter />
                 </div>
               </div>
             ) : (
