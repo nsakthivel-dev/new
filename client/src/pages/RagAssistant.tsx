@@ -165,7 +165,7 @@ export default function RagAssistant() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-background overflow-hidden">
+    <div className="flex h-[calc(100vh-4rem)] bg-background">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex w-64 flex-shrink-0 border-r border-border/50">
         <HistorySidebar />
@@ -182,7 +182,7 @@ export default function RagAssistant() {
       </Sheet>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col">
         <ChatWindow 
           onAddToHistory={addToHistory} 
           onOpenMenu={() => setIsSheetOpen(true)}

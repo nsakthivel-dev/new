@@ -172,7 +172,7 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    overflow: hidden; /* Prevent body scrollbar */
+    overflow-x: hidden;
   }
 
   /* Hide scrollbar for main content area while keeping scroll functionality */

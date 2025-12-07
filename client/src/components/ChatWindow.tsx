@@ -29,7 +29,9 @@ export default function ChatWindow({ onAddToHistory, onOpenMenu, initialMessages
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isUserAtBottom = useRef(true);
 
   // Update messages when initialMessages changes
   useEffect(() => {
@@ -42,13 +44,23 @@ export default function ChatWindow({ onAddToHistory, onOpenMenu, initialMessages
     localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // Check if user is at the bottom of the chat
+  const checkIfUserAtBottom = () => {
+    if (!messagesContainerRef.current) return true;
+    
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+    const threshold = 50; // pixels from bottom
+    return scrollTop + clientHeight >= scrollHeight - threshold;
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const scrollToBottom = () => {};
+
+  // Handle scroll events to track user position
+  const handleScroll = () => {
+    isUserAtBottom.current = checkIfUserAtBottom();
+  };
+
+  useEffect(() => {}, [messages]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -140,7 +152,7 @@ export default function ChatWindow({ onAddToHistory, onOpenMenu, initialMessages
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-background via-background to-muted/10 overflow-hidden">
+    <div className="flex flex-col h-full bg-gradient-to-b from-background via-background to-muted/10">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center gap-3 px-4 py-3.5 border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <Button
@@ -160,7 +172,11 @@ export default function ChatWindow({ onAddToHistory, onOpenMenu, initialMessages
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent"
+        onScroll={handleScroll}
+      >
         {messages.length === 0 ? (
           <div className="flex items-center justify-center min-h-full px-4 py-12">
             <div className="text-center max-w-3xl w-full animate-in fade-in duration-700">

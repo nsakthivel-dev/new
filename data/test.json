@@ -1,0 +1,28 @@
+[
+  {
+    "id": "test-1",
+    "values": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "metadata": {
+      "source": "test-document.txt",
+      "page": 1
+    },
+    "text": "This is a test document about farming techniques."
+  },
+  {
+    "id": "test-2",
+    "values": [
+      0.4,
+      0.5,
+      0.6
+    ],
+    "metadata": {
+      "source": "test-document.txt",
+      "page": 2
+    },
+    "text": "This document covers pest control methods for crops."
+  }
+]

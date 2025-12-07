@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import AdminHeader from "./AdminHeader";
+import AdminFooter from "./AdminFooter";
 import { 
   Table, 
   TableBody, 
@@ -19,7 +21,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Search, Plus, Edit, Trash2, Eye } from "lucide-react";
+import { MoreHorizontal, Search, Plus, Edit, Trash2, Eye, Users } from "lucide-react";
 
 // Mock user data
 const mockUsers = [
@@ -59,11 +61,22 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <Card>
-        <CardHeader>
+    <>
+      <AdminHeader />
+      <main className="flex-1 p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+      <Card className="shadow-md">
+        <CardHeader className="border-b border-border bg-card/50">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <CardTitle>User List</CardTitle>
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-md">
+                <Users className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">User Management</CardTitle>
+                <p className="text-sm text-muted-foreground mt-0.5">{filteredUsers.length} total users</p>
+              </div>
+            </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -71,10 +84,10 @@ export default function UserManagement() {
                   placeholder="Search users..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-full sm:w-64"
+                  className="pl-10 w-full sm:w-64 bg-background"
                 />
               </div>
-              <Button className="flex gap-2">
+              <Button className="gap-2 shadow-sm">
                 <Plus className="h-4 w-4" />
                 Add User
               </Button>
@@ -145,12 +158,19 @@ export default function UserManagement() {
           </div>
           
           {filteredUsers.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No users found matching your search.</p>
+            <div className="text-center py-16">
+              <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <Search className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground font-medium">No users found</p>
+              <p className="text-sm text-muted-foreground mt-1">Try adjusting your search criteria</p>
             </div>
           )}
         </CardContent>
-      </Card>
-    </div>
+          </Card>
+        </div>
+      </main>
+      <AdminFooter />
+    </>
   );
 }

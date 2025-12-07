@@ -1,3 +1,9 @@
+import dotenv from "dotenv";
+import path from "node:path";
+
+// Load environment variables early
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
 import { type Server } from "node:http";
 
 import express, {

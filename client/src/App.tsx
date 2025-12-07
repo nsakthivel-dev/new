@@ -68,25 +68,17 @@ function App() {
         <ThemeProvider>
           <LanguageProvider>
             {isAdminRoute ? (
-              <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <main className="flex-1 pt-14 sm:pt-16 lg:pt-20">
-                  <div className="flex">
-                    <div className="fixed left-0 top-14 sm:top-16 lg:top-20 w-64 z-40">
-                      <AdminSidebar />
-                    </div>
-                    <div className="flex-1 ml-64">
-                      <AdminRouter />
-                    </div>
-                  </div>
-                </main>
-                <Footer />
+              <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background flex">
+                <AdminSidebar />
+                <div className="ml-64 flex-1 flex flex-col min-h-screen">
+                  <AdminRouter />
+                </div>
               </div>
             ) : (
               // Regular app layout
               <div className="min-h-screen flex flex-col">
                 <Navbar />
-                <main className="flex-1 pt-14 sm:pt-16 lg:pt-20">
+                <main className="flex-1 pt-14 sm:pt-16 lg:pt-20 overflow-auto">
                   <Router />
                 </main>
                 <Footer />

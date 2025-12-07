@@ -3,6 +3,8 @@ import UploadDocs from "@/components/UploadDocs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, FileText, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AdminHeader from "./AdminHeader";
+import AdminFooter from "./AdminFooter";
 
 export default function DocumentManager() {
   const [uploadedDocsCount, setUploadedDocsCount] = useState(0);
@@ -17,30 +19,25 @@ export default function DocumentManager() {
   };
 
   return (
-    <div className="flex-1 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 py-6">
-        {/* Page Header - Using common AdminHeader instead */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground">Document Management</h1>
-          <p className="text-muted-foreground">
-            Manage documents for the AI Assistant. When users ask questions specifically about these documents, the AI will provide only accurate information from them.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Upload className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle>Upload Documents</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">Add new documents. Users will get specific information from these when relevant.</p>
-                  </div>
+    <>
+      <AdminHeader />
+      <main className="flex-1 p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Upload Section */}
+        <div className="lg:col-span-2">
+          <Card className="shadow-md border-t-4 border-t-primary">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-md">
+                  <Upload className="h-5 w-5 text-primary-foreground" />
                 </div>
-              </CardHeader>
+                <div>
+                  <CardTitle className="text-xl">Upload Documents</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1">Add new documents to the AI knowledge base</p>
+                </div>
+              </div>
+            </CardHeader>
               <CardContent>
                 <UploadDocs onUploadSuccess={handleUploadSuccess} />
                 
@@ -55,18 +52,17 @@ export default function DocumentManager() {
             </Card>
           </div>
 
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <FileText className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle>Document Management Guide</CardTitle>
-                  </div>
+        {/* Guide Section */}
+        <div className="lg:col-span-1">
+          <Card className="shadow-md h-full">
+            <CardHeader className="bg-gradient-to-r from-muted/50 to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
+                  <FileText className="h-5 w-5 text-white" />
                 </div>
-              </CardHeader>
+                <CardTitle className="text-xl">Quick Guide</CardTitle>
+              </div>
+            </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
@@ -113,12 +109,14 @@ export default function DocumentManager() {
                     </ul>
                   </div>
                   
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                    <div className="flex items-start gap-2">
-                      <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 rounded-lg bg-yellow-100">
+                        <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                      </div>
                       <div>
-                        <h4 className="font-medium text-yellow-800">Admin Only Access</h4>
-                        <p className="text-sm text-yellow-700 mt-1">
+                        <h4 className="font-semibold text-yellow-900">Admin Only Access</h4>
+                        <p className="text-sm text-yellow-800 mt-1 leading-relaxed">
                           Only administrators can upload documents. Regular users can only ask questions about existing documents.
                         </p>
                       </div>
@@ -129,7 +127,9 @@ export default function DocumentManager() {
             </Card>
           </div>
         </div>
-      </div>
-    </div>
+        </div>
+      </main>
+      <AdminFooter />
+    </>
   );
 }

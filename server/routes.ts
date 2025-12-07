@@ -9,6 +9,9 @@ import fs from "fs/promises";
 import path from "path";
 import * as pdfParse from "pdf-parse";
 import { extractRawText } from "mammoth";
+import ingestHandler from "./pages/api/ingest.ts";
+import qaHandler from "./pages/api/qa.ts";
+import healthHandler from "./pages/api/health.ts";
 
 // Configure multer for file uploads
 const upload = multer({ dest: "uploads/" });
@@ -330,30 +333,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RAG API endpoints
   app.post("/api/rag/ingest", (req, res) => {
-    import('./pages/api/ingest.ts').then(module => {
-      module.default(req, res);
-    }).catch(error => {
-      console.error('Error loading ingest module:', error);
-      res.status(500).json({ error: 'Failed to load ingest module' });
-    });
+    try {
+      ingestHandler(req, res);
+    } catch (error: any) {
+      console.error('Error in ingest handler:', error);
+      res.status(500).json({ error: 'Failed to process ingest request', details: error.message });
+    }
   });
 
   app.post("/api/rag/qa", (req, res) => {
-    import('./pages/api/qa.ts').then(module => {
-      module.default(req, res);
-    }).catch(error => {
-      console.error('Error loading qa module:', error);
-      res.status(500).json({ error: 'Failed to load qa module' });
-    });
+    try {
+      qaHandler(req, res);
+    } catch (error: any) {
+      console.error('Error in qa handler:', error);
+      res.status(500).json({ error: 'Failed to process qa request', details: error.message });
+    }
   });
 
   app.get("/api/rag/health", (req, res) => {
-    import('./pages/api/health.ts').then(module => {
-      module.default(req, res);
-    }).catch(error => {
-      console.error('Error loading health module:', error);
-      res.status(500).json({ error: 'Failed to load health module' });
-    });
+    try {
+      healthHandler(req, res);
+    } catch (error: any) {
+      console.error('Error in health handler:', error);
+      res.status(500).json({ error: 'Failed to process health request', details: error.message });
+    }
   });
 
   const httpServer = createServer(app);
